@@ -1,0 +1,129 @@
+from pydantic import BaseModel, Field
+from typing import Annotated
+import operator
+from datetime import datetime
+import json
+from langchain_core.messages import AIMessage, ToolMessage 
+
+def get_base_events(raw_events: list, data_schema):
+'''
+if not raw_events:
+return None
+'''
+basic_fields = dict()
+for field in data_schema.model_fields:
+basic_fields.update({field : None})
+proc_events = list()
+for event in raw_events:
+for rec_field in event:
+if rec_field in basic_fields:
+basic_fields.update({rec_field : event.get(rec_field)})
+proc_events.append(basic_fields)
+return proc_events
+
+class EventDataSchema(BaseModel):
+ApplicationProtocol: str|None = Field(description="Name of the application layer protocol. For example, HTTPS, SSH, Telnet.")
+BytesIn: int|None = Field(description="Number of bytes received.")
+BytesOut: int|None = Field(description="Number of bytes sent.")
+DestinationAddress: str|None = Field(description="IPv4 or IPv6 address of the asset with which the action will be performed. For example, 0.0.0.0 or xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx")
+DestinationCity: str|None = Field(description="City corresponding to the IP address from the DestinationAddress field.")
+DestinationCountry: str|None = Field(description="Country corresponding to the IP address from the DestinationAddress field.")
+DestinationDnsDomain: str|None = Field(description="DNS part of the fully qualified domain name of the destination.")
+DestinationHostName: str|None = Field(description="Hostname of the destination. FQDN of the destination, if available.")
+DestinationLatitude: float|None = Field(description="Longitude corresponding to the IP address from the DestinationAddress field.")
+DestinationLongitude: float|None = Field(description="Latitude corresponding to the IP address from the DestinationAddress field.")
+DestinationMacAddress: str|None = Field(description="MAC address of the destination. For example, aa:bb:cc:dd:ee:00")
+DestinationNtDomain: str|None = Field(description="Windows Domain Name of the destination.")
+DestinationPort: int|None = Field(description="Port number of the destination.")
+DestinationProcessID: int|None = Field(description="System process ID registered on the destination.")
+DestinationProcessName: str|None = Field(description="Name of the system process registered on the destination. For example, sshd, telnet.")
+DestinationRegion: str|None = Field(description="Region corresponding to the IP address from the DestinationAddress field.")
+DestinationServiceName: str|None = Field(description="Name of the service or daemon on the destination side. For example, sshd.")
+DestinationTranslatedAddress: str|None = Field(description="IPv4 or IPv6 address of the destination after translation. For example, 0.0.0.0 or xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx")
+DestinationTranslatedPort: int|None = Field(description="Port number on the destination after translation.")
+DestinationUserID: str|None = Field(description="User ID of the destination.")
+DestinationUserName: str|None = Field(description="Username of the destination.")
+DestinationUserPrivileges: str|None = Field(description="Role names that identify the user privileges of the destination. For example, User, Guest, Administrator.")
+DeviceAction: str|None = Field(description="Action taken by the event source. For example, blocked, detected.")
+DeviceAddress: str|None = Field(description="IPv4 or IPv6 address of the device from which the event was received. For example, 0.0.0.0 or xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx:xxxx")
+DeviceCity: str|None = Field(description="Hostname of SIEM event collector.")
+DeviceCountry: str|None = Field(description="Country corresponding to the IP address from the DeviceAddress field.")
+DeviceDnsDomain: str|None = Field(description="DNS part of the fully qualified domain name of the device from which the event was received.")
+DeviceEventClassID: str|None = Field(description="Event type ID assigned by the event DeviceCustomDate1 field.")
+DeviceCustomDate2: int|datetime|None = Field(description="Field for mapping a date and time value (timestamp). Time is specified in UTC0. In the KUMA web interface, the value is displayed according to the user\'s browser time zone.")
+DeviceCustomDate2Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomDate2 field.")
+DeviceCustomFloatingPoint1: float|None = Field(description="Field for mapping floating point numbers.")
+DeviceCustomFloatingPoint1Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomFloatingPoint1 field.")
+DeviceCustomNumber1: int|None = Field(description="Field for mapping an integer value.")
+DeviceCustomNumber1Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomNumber1 field.")
+DeviceCustomNumber2: int|None = Field(description="Field for mapping an integer value.")
+DeviceCustomNumber2Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomNumber2 field.")
+DeviceCustomNumber3: int|None = Field(description="Field for mapping an integer value.")
+DeviceCustomNumber3Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomNumber3 field.")
+DeviceCustomString1: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString1Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString1 field.")
+DeviceCustomString2: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString2Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString2 field.")
+DeviceCustomString3: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString3Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString3 field.")
+DeviceCustomString4: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString4Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString4 field.")
+DeviceCustomString5: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString5Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString5 field.")
+DeviceCustomString6: str|None = Field(description="Field for mapping a string value.")
+DeviceCustomString6Label: str|None = Field(description="Field for describing the purpose of the DeviceCustomString6 field.")
+DeviceDirection: int|None = Field(description="Field for describing the event connection direction. \"0\" - incoming connection, \"1\" - outgoing connection.")
+DeviceEventCategory: str|None = Field(description="Event category assigned by the device that sent the event to the SIEM.")
+FlexDate1: int|datetime|None = Field(description="Field for mapping a date and time value (timestamp). Time is specified in UTC0. In the KUMA web interface, the value is displayed according to the user\'s browser time zone.")
+FlexDate1Label: str|None = Field(description="Field for describing the purpose of the FlexDate1 field.")
+FlexNumber1: int|None = Field(description="Field for mapping an integer value.")
+FlexNumber1Label: str|None = Field(description="Field for describing the purpose of the FlexNumber1 field.")
+FlexNumber2: int|None = Field(description="Field for mapping an integer value.")
+FlexNumber2Label: str|None = Field(description="Field for describing the purpose of the FlexNumber2 field.")
+FlexString1: str|None = Field(description="Field for mapping a string value.")
+FlexString1Label: str|None = Field(description="Field for describing the purpose of the FlexString1 field.")
+FlexString2: str|None = Field(description="Field for mapping a string value.")
+FlexString2Label: str|None = Field(description="Field for describing the purpose of the FlexString2 field.")
+AffectedAssets: list|dict|None = Field(description="A nested structure from which you can access assets and accounts related to the alert, and also find out how many times they appear in the alert events.")
+AggregationRuleID: str|None = Field(description="Aggregation rule ID.")
+AggregationRuleName: str|None = Field(description="Name of the aggregation rule that processed the event.")
+BaseEventCount: int|None = Field(description="For an aggregated base event â€“ the number of base events that were processed by the aggregation rule. For a correlation event â€“ the number of base events that were processed by the correlation rule that created the correlation event.")
+BaseEvents: list|None = Field(description="A nested structure with a list of base events. This field can be populated for correlation events.")
+Code: str|None = Field(description="In a base event, this is the return code of a process, function, or operation from the source.")
+CorrelationRuleID: str|None = Field(description="Correlation rule ID.")
+CorrelationRuleName: str|None = Field(description="Name of the correlation rule that triggered the creation of the correlation event. Populated only for correlation events.")
+DestinationAccountID: str|None = Field(description="Field stores the user ID.")
+DestinationAssetID: str|None = Field(description="Field stores the asset ID of the destination.")
+SA: dict|None = Field(description="")
+
+class IncidentDataSchema(BaseModel):
+uid: str
+alert_name: str
+base_events: list[EventDataSchema]|None
+alert_irp_data: dict
+description: str
+description_enriched: str
+hosts: Annotated[list[str], operator.add]
+notes: Annotated[list[str|AIMessage|ToolMessage], operator.add]
+conclusion: str which you can access assets and accounts related to the alert, and also find out how many times they appear in the alert events.")
+AggregationRuleID: str|None = Field(description="Aggregation rule ID.")
+AggregationRuleName: str|None = Field(description="Name of the aggregation rule that processed the event.")
+BaseEventCount: int|None = Field(description="For an aggregated base event â€“ the number of base events that were processed by the aggregation rule. For a correlation event â€“ the number of base events that were processed by the correlation rule that created the correlation event.")
+BaseEvents: list|None = Field(description="A nested structure with a list of base events. This field can be populated for correlation events.")
+Code: str|None = Field(description="In a base event, this is the return code of a process, function, or operation from the source.")
+CorrelationRuleID: str|None = Field(description="Correlation rule ID.")
+CorrelationRuleName: str|None = Field(description="Name of the correlation rule that triggered the creation of the correlation event. Populated only for correlation events.")
+DestinationAccountID: str|None = Field(description="Field stores the user ID.")
+DestinationAssetID: str|None = Field(description="Field stores the asset ID of the destination.")
+SA: dict|None = Field(description="")
+
+class IncidentDataSchema(BaseModel):
+uid: str
+alert_name: str
+base_events: list[EventDataSchema]|None
+alert_irp_data: dict
+description: str
+description_enriched: str
+hosts: Annotated[list[str], operator.add]
+notes: Annotated[list[str|AIMessage|ToolMessage], operator.add]
+conclusion: str
