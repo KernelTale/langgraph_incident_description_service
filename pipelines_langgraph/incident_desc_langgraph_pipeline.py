@@ -64,14 +64,15 @@ def evaluate_if_tool_call_is_needed(state: IncidentDataSchema, llm: ChatOpenAI):
   """Whether to use a tool or not"""
   llm_with_tools = llm.bind_tools(user_tools)
   return {
-    "notes": [
+    "tool_calls": [
       llm_with_tools.invoke(
       [
         SystemMessage(
         content="You are network administrator who retrieves data using list of hosts."
         )
       ]
-      + state.hosts
+      + HumanMessage(
+        content=f"Find data on following hosts: {state.hosts}.")
       )
     ]
   }
@@ -79,7 +80,7 @@ def evaluate_if_tool_call_is_needed(state: IncidentDataSchema, llm: ChatOpenAI):
 def tool_usage(state: IncidentDataSchema, llm: ChatOpenAI):
   """Performs the tool call"""
   result = []
-  for tool_call in state.notes[-1].tool_calls:
+  for tool_call in state.tool_calls[-1].tool_calls:
     tool = tools_by_name[tool_call["name"]]
     observation = tool.invoke(tool_call["args"])
     result.append(ToolMessage(content=observation, tool_call_id=tool_call["id"]).content)
