@@ -168,4 +168,5 @@ class IncidentDataSchema(BaseModel):
   description_enriched: str
   hosts: Annotated[list[str], operator.add]
   notes: Annotated[list[str|AIMessage|ToolMessage], operator.add]
+  tool_calls: Annotated[list[AIMessage|ToolMessage], operator.add]
   conclusion: str
