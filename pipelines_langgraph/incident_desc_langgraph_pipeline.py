@@ -18,34 +18,34 @@ tools_by_name = {tool.name: tool for tool in user_tools}
 
 # Add LLMs
 mistral_small = ChatOpenAI(
-  model="langraph/mistral-small:24b-instruct-2501-q8_0",
+  model="langgraph/mistral-small:24b-instruct-2501-q8_0",
   base_url="http://msk01-llms02:81/v1",
   api_key="sk-bf-12345678-663a-4fdc-b0e7-1ee1208cca49",
   temperature=0.4
   )
 qwen_medium = ChatOpenAI(
-  model="langraph/qwen3:32b-q8_0",
+  model="langgraph/qwen3:32b-q8_0",
   base_url="http://msk01-llms02:81/v1",
   temperature=0.8,
   api_key="sk-bf-12345678-663a-4fdc-b0e7-1ee1208cca49"
   )
 
 deepseek_large = ChatOpenAI(
-  model="langraph/deepseek-r1:671b",
+  model="langgraph/deepseek-r1:671b",
   base_url="http://msk01-llms02:81/v1",
   api_key="sk-bf-12345678-663a-4fdc-b0e7-1ee1208cca49",
   temperature=0.8
   )
 
 qwen3_large = ChatOpenAI(
-  model="langraph/qwen3:235b-a22b-q8_0",
+  model="langgraph/qwen3:235b-a22b-q8_0",
   base_url="http://msk01-llms02:81/v1",
   temperature=0.8,
   api_key="sk-bf-12345678-663a-4fdc-b0e7-1ee1208cca49"
   )
 
 qwen2_instruct= ChatOpenAI(
-  model="langraph/qwen2.5:14b-instruct-q8_0",
+  model="langgraph/qwen2.5:14b-instruct-q8_0",
   base_url="http://msk01-llms02:81/v1",
   temperature=0.3,
   api_key="sk-bf-12345678-663a-4fdc-b0e7-1ee1208cca49"
