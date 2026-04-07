@@ -2,7 +2,7 @@ import json
 import requests
 from flask import Flask, request, jsonify, Response
 import logging
-from pipelines_langgraph.pulse_langgraph_pipeline import run_langgraph_pipeline
+from pipelines_langgraph.incident_desc_langgraph_pipeline import run_langgraph_pipeline
 import re
 from dependencies.io_handler import get_base_events, EventDataSchema
 
